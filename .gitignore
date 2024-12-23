@@ -1,0 +1,9 @@
+*.ipynb
+*.csv
+*.zip
+*.tar
+*.log
+*.tmp
+.DS_Store
+node_modules/
+
