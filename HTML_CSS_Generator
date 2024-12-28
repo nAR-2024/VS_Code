@@ -1,0 +1,91 @@
+import os
+
+def get_user_input():
+    print("Let's set up your webpage!")
+    headings = []
+
+    # Get user input for up to 5 headings
+    for i in range(1, 6):
+        add_heading = input(f"Do you want to add Heading {i}? (yes/no): ").strip().lower()
+        if add_heading != "yes":
+            break
+
+        print(f"--- Options for Heading {i} ---")
+        text = input("Enter the text for the heading: ")
+
+        align = input("Choose alignment (center, left, right): ")
+        font_weight = input("Choose font weight (normal, bold): ")
+
+        size = input("Enter font size (in px): ")
+        color = input("Enter text color (e.g., #000000 or 'red'): ")
+        background_color = input("Enter background color (e.g., #FFFFFF or 'blue'): ")
+
+        headings.append({
+            "class_name": f"heading-{i}",
+            "text": text,
+            "align": align,
+            "font-weight": font_weight,
+            "size": size,
+            "color": color,
+            "background-color": background_color,
+        })
+
+    return headings
+
+def generate_html_css(header_options, output_folder):
+    # Create the output folder if it doesn't exist
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
+    # HTML content
+    html_content = """<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generated Web Page</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+"""
+
+    # Add headers to the HTML
+    for header in header_options:
+        html_content += f'<h1 class="{header["class_name"]}">{header["text"]}</h1>\n'
+
+    html_content += "</body>\n</html>"
+
+    # Write HTML file
+    with open(os.path.join(output_folder, "index.html"), "w") as html_file:
+        html_file.write(html_content)
+
+    # CSS content
+    css_content = """body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+"""
+
+    # Add header styles to the CSS
+    for header in header_options:
+        css_content += f".{header['class_name']} {{\n"
+        css_content += f"    text-align: {header['align']};\n"
+        css_content += f"    font-weight: {header['font-weight']};\n"
+        css_content += f"    color: {header['color']};\n"
+        css_content += f"    background-color: {header['background-color']};\n"
+        css_content += f"    font-size: {header['size']}px;\n"
+        css_content += "}\n\n"
+
+    # Write CSS file
+    with open(os.path.join(output_folder, "styles.css"), "w") as css_file:
+        css_file.write(css_content)
+
+    print(f"Files have been generated in {output_folder}")
+
+# Main Execution
+output_folder = "web_output"
+header_options = get_user_input()
+generate_html_css(header_options, output_folder)
